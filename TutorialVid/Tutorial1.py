@@ -1,12 +1,16 @@
 import os
-
 os.environ['TF_CPP_MIN_LOG_LEVEL'] = '3'  # removes debug info
+import tensorflow as tf
 from tensorflow import keras
+import numpy
+import matplotlib.pyplot as plt
 
 class_names = ['T-shirt/top', 'Trouser', 'Pullover', 'Dress', 'Coat',
                'Sandal', 'Shirt', 'Sneaker', 'Bag', 'Ankle boot']
 
 
+# Pre: None
+# Post: Returns type of attire according to index
 def idenL(index):
     return class_names[index]
 
