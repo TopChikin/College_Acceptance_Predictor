@@ -42,8 +42,6 @@ driver.find_element_by_name('ctl00$ContentPlaceHolder1$UsernameTextBox').send_ke
 driver.find_element_by_name('ctl00$ContentPlaceHolder1$PasswordTextBox').send_keys('Meh1001$.')
 driver.find_element_by_name('ctl00$ContentPlaceHolder1$SubmitButton').click()
 
-sleep(2)
-
 #college = input('Input College: ')
 college = 'virginia tech'
 searchbar = driver.find_element_by_name('query')
@@ -67,10 +65,8 @@ sleep(2)
 # buttons_bar = soup.find('div', class_='tabs hubs-top-tabs-bar')
 # buttons = buttons_bar.find_all('span', role='button')
 # admissions = buttons[3]
-tab = driver.find_element_by_class_name('tabs hubs-top-tabs-bar')
+tab = driver.find_element_by_class_name('tabs hubs-top-tabs-bar').find_elements_by_class_name('hubs-top-tabs')
 print(tab)
-
-# TODO: CLICK BUTTON WITH JAVA SCRIPT EXECUTOR SELENIUM
 
 sleep(2)
 
