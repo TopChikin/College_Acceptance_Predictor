@@ -4,6 +4,10 @@ import tensorflow as tf
 from tensorflow import keras
 import numpy as np
 import matplotlib.pyplot as plt
+import time
+
+# print('GPU: ' + tf.test.gpu_device_name())
+# time.sleep(2)
 
 class_names = ['T-shirt/top', 'Trouser', 'Pullover', 'Dress', 'Coat',
                'Sandal', 'Shirt', 'Sneaker', 'Bag', 'Ankle boot']
@@ -28,6 +32,7 @@ test_images = test_images / 255.0
 # plt.imshow(train_images[0]) #Shows with weird colors
 # plt.show()
 
+#Build Neural Network Model
 model = keras.Sequential([
     keras.layers.Flatten(input_shape=(28, 28)),
     keras.layers.Dense(128, activation='relu'),
@@ -42,6 +47,13 @@ model.fit(train_images, train_labels, epochs=5)
 test_loss, test_acc = model.evaluate(test_images, test_labels)
 print("Tested Accuracy:", test_acc)
 
-
 prediction = model.predict(test_images)
-print(idenL(np.argmax(prediction[0])))
+# print(idenL(np.argmax(prediction[0])))
+
+#Check first 5 of test data manually
+for i in range(5):
+    plt.grid(False)
+    plt.imshow(test_images[i], cmap=plt.cm.binary)
+    plt.xlabel(idenL(test_labels[i]))
+    plt.title('Guess: ' + idenL(np.argmax(prediction[i])) + '\nCorrect: ' + idenL(test_labels[i]))
+    plt.show()
