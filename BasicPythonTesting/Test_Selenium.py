@@ -68,6 +68,8 @@ sleep(2)
 tab = driver.find_element_by_class_name('tabs hubs-top-tabs-bar').find_elements_by_class_name('hubs-top-tabs')
 print(tab)
 
+# TODO: CLICK BUTTON WITH JAVA SCRIPT EXECUTOR IN SELENIUM
+
 sleep(2)
 
 html = driver.page_source
