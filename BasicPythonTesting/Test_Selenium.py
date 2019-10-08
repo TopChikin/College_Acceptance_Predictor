@@ -42,7 +42,8 @@ driver.find_element_by_name('ctl00$ContentPlaceHolder1$UsernameTextBox').send_ke
 driver.find_element_by_name('ctl00$ContentPlaceHolder1$PasswordTextBox').send_keys('Meh1001$.')
 driver.find_element_by_name('ctl00$ContentPlaceHolder1$SubmitButton').click()
 
-college = input('Input College: ')
+#college = input('Input College: ')
+college = 'virginia tech'
 searchbar = driver.find_element_by_name('query')
 searchbar.send_keys(college)
 searchbar.submit()
@@ -59,11 +60,15 @@ driver.get('https://student.naviance.com' + button['href'])
 
 sleep(2)
 
-html = driver.page_source
-soup = BeautifulSoup(html, features="html.parser")
-buttons_bar = soup.find('div', class_='tabs hubs-top-tabs-bar')
-buttons = buttons_bar.find_all('span', role='button')
-admissions = buttons[3]
+# html = driver.page_source
+# soup = BeautifulSoup(html, features="html.parser")
+# buttons_bar = soup.find('div', class_='tabs hubs-top-tabs-bar')
+# buttons = buttons_bar.find_all('span', role='button')
+# admissions = buttons[3]
+tab = driver.find_element_by_class_name('tabs hubs-top-tabs-bar').find_elements_by_class_name('hubs-top-tabs')
+print(tab)
+
+sleep(2)
 
 html = driver.page_source
 soup = BeautifulSoup(html, features="html.parser")
