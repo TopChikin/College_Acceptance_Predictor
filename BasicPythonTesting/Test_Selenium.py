@@ -7,6 +7,7 @@ from time import sleep
 
 driver = wd.Chrome(r'C:\Users\jonat\PycharmProjects\Github-Tensorflow\VenvInstances\chromedriver.exe')
 
+#r'..\..\VenvInstances\chromedriver.exe'
 
 #Setup driver / engine
 url = 'https://launchpad.classlink.com/loudoun%20?'
