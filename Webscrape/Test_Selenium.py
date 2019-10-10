@@ -107,14 +107,8 @@ for point in points:
     html = driver.page_source
     soup = BeautifulSoup(html, features="html.parser")
 
-    try:
-        data_point = soup.find('div', class_='xy-tooltip')
-        print(data_point)
-    except:
-        print('CANT FIND DATA POINT')
-
-
-
+    data_point = soup.find('div', class_='xy-tooltip')
+    print(data_point)
 
 # points = point_container.find_elements_by_tag_name('path')
 # print(points)
