@@ -1,5 +1,5 @@
-/TensorVenv/
-/TensorVenvGPU/
-/VenvInstances/
-/__init__.py/
 /Creds/school_creds.txt
+/VenvInstances/TensorVenvGPU/
+/VenvInstances/TensorVenv/
+/VenvInstances/chromedriver.exe
+/.idea/
