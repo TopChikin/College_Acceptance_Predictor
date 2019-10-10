@@ -98,28 +98,37 @@ sleep(1)
 # html = driver.page_source
 # soup = BeautifulSoup(html, features="html.parser")
 
-"""
-OMG IT FINALLY WORKS -JONATHAN LE 1:27 AM 10/10/19
-"""
-point_container = driver.find_element_by_class_name('nv-point-paths')
-points = point_container.find_elements_by_tag_name('path')
-for point in points:
-    action = ActionChains(driver).move_to_element(point).perform()
-    html = driver.page_source
-    soup = BeautifulSoup(html, features="html.parser")
+open('C:/Users/jonat/PycharmProjects/Python-Tensorflow/CollegeML/College_Data/' +  college.replace(' ', '-') + '.txt', 'w').close()
+with open('C:/Users/jonat/PycharmProjects/Python-Tensorflow/CollegeML/College_Data/' + college.replace(' ', '-') + '.txt', 'w') as file:
 
-    data_point = soup.find('div', class_='xy-tooltip')
-    print(data_point)
+    """
+    OMG IT FINALLY WORKS -JONATHAN LE 1:27 AM 10/10/19
+    """
+    point_container = driver.find_element_by_class_name('nv-point-paths')
+    points = point_container.find_elements_by_tag_name('path')
+    for point in points:
+        action = ActionChains(driver).move_to_element(point).perform()
+        html = driver.page_source
+        soup = BeautifulSoup(html, features="html.parser")
 
-# points = point_container.find_elements_by_tag_name('path')
-# print(points)
-# for point in points:
-#     action = ActionChains(driver).move_to_element(point).perform()
-#     sleep(1)
-#     html = driver.page_source
-#     soup = BeautifulSoup(html, features="html.parser")
-#     data_point = soup.find('div', class_='nvtooltip xy-tooltip')
-#     print(data_point)
+        data_point = soup.find('div', class_='xy-tooltip')
+        try:
+            print(str(data_point.text.find('ACCEPTED')) + ', ' + str(data_point.text.find('DENIED')))
+            if data_point.text.find('ACCEPTED') != -1 or data_point.text.find('DENIED') != -1:
+                data = data_point.text
+                sat_score = data[data.index('SAT1600: ') + 9: data.index(',' - 1)]
+                gpa = data[data.index('GPA: ') + 5: len(data)]
+                if data.find('ACCEPTED'):
+                    acceptance = 1
+                elif data.find('DENIED'):
+                    acceptance = 0
+                else:
+                    acceptance = -1
+                data_to_write = sat_score + ', ' + gpa + ', ' + acceptance
+                print(data_to_write)
+                file.write(data_to_write + '\n')
+        except:
+            pass
 
 # print('CLOSING DRIVER')
 # driver.close()
