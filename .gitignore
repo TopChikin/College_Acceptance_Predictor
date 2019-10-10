@@ -2,5 +2,4 @@
 /TensorVenvGPU/
 /VenvInstances/
 /__init__.py/
-/Creds/
-/school_creds.txt/
+/Creds/school_creds.txt
