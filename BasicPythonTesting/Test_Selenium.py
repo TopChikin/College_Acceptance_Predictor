@@ -5,16 +5,18 @@ from time import sleep
 
 #Group effort mostly by reece
 
-driver = wd.Chrome(r'C:\Users\jonat\PycharmProjects\Github-Tensorflow\VenvInstances\chromedriver.exe')
+with open(r'C:\Users\jonat\PycharmProjects\Python-Tensorflow\Creds\school_creds.txt', 'r') as creds_file:
+    username = creds_file.readline()
+    password = creds_file.readline()
 
-#r'..\..\VenvInstances\chromedriver.exe'
+driver = wd.Chrome(r'C:\Users\jonat\PycharmProjects\Github-Tensorflow\VenvInstances\chromedriver.exe')
 
 #Setup driver / engine
 url = 'https://launchpad.classlink.com/loudoun%20?'
 driver.get(url) #Access website
 
-driver.find_element_by_name("username").send_keys("774520") #Entering Username
-driver.find_element_by_name('password').send_keys('Meh1001$.') #Entering Username
+driver.find_element_by_name("username").send_keys(username) #Entering Username
+driver.find_element_by_name('password').send_keys(password) #Entering Username
 driver.find_element_by_name('signin').click()
 
 sleep(1)
@@ -33,8 +35,8 @@ while True:
     except:
         sleep(0.5)
 
-driver.find_element_by_name('ctl00$ContentPlaceHolder1$UsernameTextBox').send_keys('774520')
-driver.find_element_by_name('ctl00$ContentPlaceHolder1$PasswordTextBox').send_keys('Meh1001$.')
+driver.find_element_by_name('ctl00$ContentPlaceHolder1$UsernameTextBox').send_keys(username)
+driver.find_element_by_name('ctl00$ContentPlaceHolder1$PasswordTextBox').send_keys(password)
 driver.find_element_by_name('ctl00$ContentPlaceHolder1$SubmitButton').click()
 
 #college = input('Input College: ')
