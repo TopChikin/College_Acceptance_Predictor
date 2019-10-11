@@ -13,21 +13,24 @@ with open(r'C:\Users\jonat\PycharmProjects\Python-Tensorflow\Creds\school_creds.
 # driver = wd.Chrome(r'C:\Users\jonat\PycharmProjects\Python-Tensorflow\VenvInstances\chromedriver.exe')
 driver = wd.Chrome()
 
-# Setup driver / engine
-# url = 'https://launchpad.classlink.com/loudoun%20?'
-# driver.get(url)  # Access website
+"""
+Setup driver / engine
+url = 'https://launchpad.classlink.com/loudoun%20?'
+driver.get(url)  # Access website
 
-# driver.find_element_by_name("username").send_keys(username)  # Entering Username
-# driver.find_element_by_name('password').send_keys(password)  # Entering Username
-# driver.find_element_by_name('signin').click()
-# sleep(2)
-# driver.get('https://launchpad.classlink.com/browsersso/423078')
-# while True:
-#     try:
-#         driver.find_element_by_class_name('js-btn-continue-to-site').click()
-#         break
-#     except:
-#         sleep(0.5)
+driver.find_element_by_name("username").send_keys(username)  # Entering Username
+driver.find_element_by_name('password').send_keys(password)  # Entering Username
+driver.find_element_by_name('signin').click()
+sleep(2)
+driver.get('https://launchpad.classlink.com/browsersso/423078')
+while True:
+    try:
+        driver.find_element_by_class_name('js-btn-continue-to-site').click()
+        break
+    except:
+        sleep(0.5)
+"""
+
 driver.get('https://id.naviance.com')
 
 sleep(1)
@@ -42,7 +45,7 @@ for char in school:
     input.send_keys(char)
     sleep(0.007)
 
-sleep(0.5)
+sleep(0.75)
 driver.find_element_by_id('react-autowhatever-1--item-0').click()
 
 driver.find_element_by_class_name('AuthMethod--label').click()
@@ -147,7 +150,14 @@ with open(file_directory,'w') as file:
                 gpa = data[data.find('GPA: ') + len('GPA: '):]
                 data_list.append(str(gpa))
 
+                college_plan_dict = {
+                    'ED':1,
+                    'EA':2,
+                    'RD':3
+                }
 
+                college_plan = college_plan_dict.get(data[data.find('(') + 1:data.find(')')], '-1')
+                data_list.append(str(college_plan))
 
                 if data.find('ACCEPTED') > -1:
                     acceptance = 1
@@ -158,10 +168,10 @@ with open(file_directory,'w') as file:
 
                 data_list.append(str(acceptance))
                 data_to_write = ', '.join(data_list)
-                print(data + ' [ADDING TO FILE]')
+                print('[ADDING TO FILE] --> ' + data)
                 file.write(data_to_write + '\n')
             else:
-                print(data)
+                print('INCORRECT FORMAT --> ' + data)
         except:
             pass
 
