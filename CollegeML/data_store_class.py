@@ -41,8 +41,21 @@ class data_storage:
             assert len(sat_list) == len(gpa_list) and len(sat_list) == len(plan_list) and len(sat_list) == len(
                 accept_list)
 
+    def get_train_data(self, float):
+
+        if float > 1.00 or float < 0.00:
+            raise Exception('INCORRECT FLOAT RATIO - float > 1.00 or float < 0.00')
+
+        length = len(self.data_list['sat'])
+        train_index = int((length) * float)
+
+        return (self.data_list['sat'][:train_index], self.data_list['sat'][train_index:]), (self.data_list['gpa'][:train_index], self.data_list['gpa'][train_index:]), (self.data_list['plan'][:train_index], self.data_list['plan'][train_index:]), (self.data_list['accept'][:train_index], self.data_list['accept'][train_index:])
+
     def print_list(self):
         print(self.data_list)
+
+    def total_length(self):
+        return len(self.data_list['sat'])
 
     def check_errors(self):
 

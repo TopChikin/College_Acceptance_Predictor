@@ -23,6 +23,7 @@ def idenL(index):
 data = keras.datasets.fashion_mnist
 
 (train_images, train_labels), (test_images, test_labels) = data.load_data()
+print(train_images)
 
 # Shrink data to float nums
 train_images = train_images / 255.0
