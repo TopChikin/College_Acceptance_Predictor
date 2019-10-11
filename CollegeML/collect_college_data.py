@@ -8,41 +8,53 @@ from time import sleep
 with open(r'C:\Users\jonat\PycharmProjects\Python-Tensorflow\Creds\school_creds.txt', 'r') as creds_file:
     username = creds_file.readline()
     password = creds_file.readline()
+    school = creds_file.readline()
 
-#driver = wd.Chrome(r'C:\Users\jonat\PycharmProjects\Python-Tensorflow\VenvInstances\chromedriver.exe')
+# driver = wd.Chrome(r'C:\Users\jonat\PycharmProjects\Python-Tensorflow\VenvInstances\chromedriver.exe')
 driver = wd.Chrome()
 
 # Setup driver / engine
-url = 'https://launchpad.classlink.com/loudoun%20?'
-driver.get(url)  # Access website
+# url = 'https://launchpad.classlink.com/loudoun%20?'
+# driver.get(url)  # Access website
 
-driver.find_element_by_name("username").send_keys(username)  # Entering Username
-driver.find_element_by_name('password').send_keys(password)  # Entering Username
-driver.find_element_by_name('signin').click()
-
-sleep(2)
-
-driver.get('https://launchpad.classlink.com/browsersso/423078')
-
-# def waitForClass(class_Name):
-#     while driver.find_element_by_class_name(class_Name) == None:
+# driver.find_element_by_name("username").send_keys(username)  # Entering Username
+# driver.find_element_by_name('password').send_keys(password)  # Entering Username
+# driver.find_element_by_name('signin').click()
+# sleep(2)
+# driver.get('https://launchpad.classlink.com/browsersso/423078')
+# while True:
+#     try:
+#         driver.find_element_by_class_name('js-btn-continue-to-site').click()
+#         break
+#     except:
 #         sleep(0.5)
+driver.get('https://id.naviance.com')
 
-while True:
-    try:
-        driver.find_element_by_class_name('js-btn-continue-to-site').click()
-        break
-    except:
-        sleep(0.5)
+sleep(1)
+
+html = driver.page_source
+soup = BeautifulSoup(html, features='html.parser')
+button_link = soup.find('a', class_='button secondary')['href']
+driver.get(button_link)
+
+input = driver.find_element_by_tag_name('input')
+for char in school:
+    input.send_keys(char)
+    sleep(0.007)
+
+sleep(0.5)
+driver.find_element_by_id('react-autowhatever-1--item-0').click()
+
+driver.find_element_by_class_name('AuthMethod--label').click()
 
 driver.find_element_by_name('ctl00$ContentPlaceHolder1$UsernameTextBox').send_keys(username)
 driver.find_element_by_name('ctl00$ContentPlaceHolder1$PasswordTextBox').send_keys(password)
-driver.find_element_by_name('ctl00$ContentPlaceHolder1$SubmitButton').click()
+#driver.find_element_by_name('ctl00$ContentPlaceHolder1$SubmitButton').click()
 
 # college = input('Input College: ')
 college = 'virginia tech'
 
-sleep(2)
+sleep(1.25)
 
 searchbar = driver.find_element_by_name('query')
 searchbar.send_keys(college)
@@ -52,7 +64,7 @@ sleep(1)
 
 html = driver.page_source
 soup = BeautifulSoup(html, features="html.parser")
-collegeContainer = soup.find('td', {'class': 'containers-Colleges-LookupV2-Grid-styles-column'})
+collegeContainer = soup.find('td', class_='containers-Colleges-LookupV2-Grid-styles-column')
 # rint(collegeContainer)
 button = collegeContainer.find('a', class_='components-ClickHOC-styles-medium')
 # print(button['href'])
@@ -75,7 +87,7 @@ sleep(3)
 action = ActionChains(driver)
 action.move_to_element(admission)
 action.click().perform()
-"""
+
 
 # Couldn't find button element to click, so User will manually click instead temporarily
 while True:
@@ -92,41 +104,64 @@ while True:
     except:
         print('Admissions Page Not Open (Please click on Admissions)')
         sleep(1)
+"""
+
+try:
+    driver.find_element_by_class_name('hub-tooltip--favorite').find_element_by_class_name('hub-tooltip__close').click()
+except:
+    pass
+
+driver.find_element_by_class_name('hubs-top-tabs-bar').find_elements_by_class_name('hubs-top-tabs')[3].click()
 
 sleep(1)
 
 # html = driver.page_source
 # soup = BeautifulSoup(html, features="html.parser")
+file_directory = 'C:/Users/jonat/PycharmProjects/Python-Tensorflow/CollegeML/College_Data/' + college.replace(' ', '-') + '.txt'
 
-open('C:/Users/jonat/PycharmProjects/Python-Tensorflow/CollegeML/College_Data/' +  college.replace(' ', '-') + '.txt', 'w').close()
-with open('C:/Users/jonat/PycharmProjects/Python-Tensorflow/CollegeML/College_Data/' + college.replace(' ', '-') + '.txt', 'w') as file:
-
+open(file_directory,'w').close()
+with open(file_directory,'w') as file:
     """
     OMG IT FINALLY WORKS -JONATHAN LE 1:27 AM 10/10/19
     """
     point_container = driver.find_element_by_class_name('nv-point-paths')
     points = point_container.find_elements_by_tag_name('path')
-    for point in points:
-        action = ActionChains(driver).move_to_element(point).perform()
-        html = driver.page_source
-        soup = BeautifulSoup(html, features="html.parser")
 
-        data_point = soup.find('div', class_='xy-tooltip')
+    for point in points:
+
         try:
-            print(str(data_point.text.find('ACCEPTED')) + ', ' + str(data_point.text.find('DENIED')))
-            if data_point.text.find('ACCEPTED') != -1 or data_point.text.find('DENIED') != -1:
-                data = data_point.text
-                sat_score = data[data.index('SAT1600: ') + 9: data.index(',' - 1)]
-                gpa = data[data.index('GPA: ') + 5: len(data)]
-                if data.find('ACCEPTED'):
+
+            action = ActionChains(driver).move_to_element(point).perform()
+
+            html = driver.page_source
+            soup = BeautifulSoup(html, features="html.parser")
+            data_point = soup.find('div', class_='xy-tooltip')
+            data = data_point.text
+
+            if data.find('ACCEPTED') > -1 or data.find('DENIED') > -1:
+                data_list = []
+
+                sat_score = data[data.find('SAT1600: ') + len('SAT1600: '): data.find(',')]
+                data_list.append(str(sat_score))
+
+                gpa = data[data.find('GPA: ') + len('GPA: '):]
+                data_list.append(str(gpa))
+
+
+
+                if data.find('ACCEPTED') > -1:
                     acceptance = 1
-                elif data.find('DENIED'):
+                elif data.find('DENIED') > -1:
                     acceptance = 0
                 else:
                     acceptance = -1
-                data_to_write = sat_score + ', ' + gpa + ', ' + acceptance
-                print(data_to_write)
+
+                data_list.append(str(acceptance))
+                data_to_write = ', '.join(data_list)
+                print(data + ' [ADDING TO FILE]')
                 file.write(data_to_write + '\n')
+            else:
+                print(data)
         except:
             pass
 
