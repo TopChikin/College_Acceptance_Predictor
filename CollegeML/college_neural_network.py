@@ -41,7 +41,7 @@ print(type(train_sat[0]))
 
 
 model = keras.Sequential([
-    keras.layers.Dense(1, input_shape=(1, 1)),
+    keras.layers.Flatten(1, input_shape=(1, 1)),
     keras.layers.Dense(64),
     keras.layers.Dense(64),
     keras.layers.Dense(1)
