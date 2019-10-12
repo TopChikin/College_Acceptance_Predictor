@@ -9,6 +9,7 @@ with open(r'C:\Users\jonat\PycharmProjects\Python-Tensorflow\Creds\school_creds.
     username = creds_file.readline()
     password = creds_file.readline()
 
+#driver = wd.Chrome(r'C:\Users\jonat\PycharmProjects\Python-Tensorflow\VenvInstances\chromedriver.exe')
 driver = wd.Chrome()
 
 # Setup driver / engine
@@ -41,7 +42,7 @@ driver.find_element_by_name('ctl00$ContentPlaceHolder1$SubmitButton').click()
 # college = input('Input College: ')
 college = 'virginia tech'
 
-sleep(1)
+sleep(2)
 
 searchbar = driver.find_element_by_name('query')
 searchbar.send_keys(college)
