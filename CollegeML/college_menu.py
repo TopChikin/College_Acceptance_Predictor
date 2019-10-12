@@ -1,13 +1,13 @@
-from CollegeML.data_store_class import data_storage as data_list
+from CollegeML.data_store_class_2 import data_storage as data_list
 
 data = data_list('virginia-techBACKUP.txt')
 
-data.shuffle_list()
-data.shuffle_list()
-data.shuffle_list()
-data.shuffle_list()
-data.shuffle_list()
+data.print_list()
 
-# print(data.check_errors())
+data.rewrite_to_sfile('temp.txt')
+
+new_dat = data_list
+
+# print(new_dat.check_errors())
 #
-# data.remove_errors()
+# print(new_dat.remove_errors())
