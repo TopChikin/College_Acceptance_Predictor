@@ -68,6 +68,7 @@ searchbar = driver.find_element_by_name('query')
 searchbar.send_keys(college)
 searchbar.submit()
 
+
 sleep(0.75)
 
 html = driver.page_source
@@ -76,6 +77,7 @@ collegeContainer = soup.find('td', class_='containers-Colleges-LookupV2-Grid-sty
 button = collegeContainer.find('a', class_='components-ClickHOC-styles-medium')
 driver.get('https://student.naviance.com' + button['href'])
 
+# driver.get('https://student.naviance.com/colleges/profiles/a9913880-fac5-461a-8ab0-efcb22a683b5#!/Overview')
 sleep(0.75)
 
 try:

@@ -14,7 +14,7 @@ tf.get_logger().setLevel('ERROR')
 with open('College_Data/colleges.txt', 'r') as file:
     colleges = file.readlines()
 
-college_file = colleges[5].replace('\n', '')
+college_file = colleges[1].replace('\n', '')
 print(college_file)
 sleep(1.5)
 
@@ -46,7 +46,7 @@ model = keras.Sequential([
 log_dir = "logs\\fit\\" + datetime.datetime.now().strftime("%Y%m%d%H%M%S")
 tensorboard = TensorBoard(log_dir=log_dir)
 
-model.compile(optimizer=tf.optimizers.SGD(learning_rate=0.01), loss='mean_squared_error', metrics=['accuracy'])
+model.compile(optimizer=tf.optimizers.SGD(learning_rate=0.01), loss='binary_crossentropy', metrics=['accuracy'])
 model.fit(
     train_dataset,
     validation_data=test_dataset,

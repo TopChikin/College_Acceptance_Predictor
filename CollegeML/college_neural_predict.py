@@ -15,7 +15,7 @@ colleges = []
 with open('College_Data/colleges.txt', 'r') as file:
     colleges = file.readlines()
 
-college_file = colleges[0].replace('\n', '')
+college_file = colleges[1].replace('\n', '')
 print(college_file)
 sleep(1)
 
@@ -73,9 +73,25 @@ predict(sat_list, gpa_list, plan_list)
 
 print('\n')
 
-sat_list = np.array([1350])
-gpa_list = np.array([4.23])
-plan_list = np.array([2.0])
+sat_list = np.array([900, 1000, 1100, 1200, 1300, 1400, 1500, 1600])
+gpa_list = np.array([3.60, 3.80, 4.00, 4.20, 4.40, 4.60, 4.80, 5.00])
+plan_list = np.array([3.0, 3.0, 3.0, 3.0, 3.0, 3.0, 3.0, 3.0])
+
+predict(sat_list, gpa_list, plan_list)
+
+print('\n')
+
+sat_list = np.array([1200, 1200, 1200, 1300, 1300, 1300, 1400, 1400, 1400, 1500, 1500, 1500])
+gpa_list = np.array([3.80, 3.80, 3.80, 4.00, 4.00, 4.00, 4.20, 4.20, 4.20, 4.40, 4.40, 4.40])
+plan_list = np.array([1.0, 2.0, 3.0, 1.0, 2.0, 3.0, 1.0, 2.0, 3.0, 1.0, 2.0, 3.0])
+
+predict(sat_list, gpa_list, plan_list)
+
+print('\n')
+
+sat_list = np.array([1350, 1350, 1350])
+gpa_list = np.array([4.23, 4.23, 4.23])
+plan_list = np.array([1.0, 2.0, 3.0])
 
 predict(sat_list, gpa_list, plan_list)
 
