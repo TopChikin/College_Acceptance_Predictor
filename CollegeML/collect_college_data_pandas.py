@@ -38,7 +38,7 @@ while True:
 
 driver.get('https://id.naviance.com')
 
-sleep(1)
+sleep(0.75)
 
 html = driver.page_source
 soup = BeautifulSoup(html, features='html.parser')
@@ -62,13 +62,13 @@ driver.find_element_by_name('ctl00$ContentPlaceHolder1$PasswordTextBox').send_ke
 # college = input()
 # college = 'virginia tech'
 
-sleep(1.25)
+sleep(0.75)
 
 searchbar = driver.find_element_by_name('query')
 searchbar.send_keys(college)
 searchbar.submit()
 
-sleep(1)
+sleep(0.75)
 
 html = driver.page_source
 soup = BeautifulSoup(html, features="html.parser")
@@ -76,41 +76,7 @@ collegeContainer = soup.find('td', class_='containers-Colleges-LookupV2-Grid-sty
 button = collegeContainer.find('a', class_='components-ClickHOC-styles-medium')
 driver.get('https://student.naviance.com' + button['href'])
 
-sleep(1)
-
-"""
-html = driver.page_source
-soup = BeautifulSoup(html, features="html.parser")
-buttons_bar = soup.find('div', class_='tabs hubs-top-tabs-bar')
-buttons = buttons_bar.find_all('span', role='button')
-admissions = buttons[3]
-admissionContainer = driver.find_element_by_xpath("//div[contains(text(),'Admissions')]")
-admission = admissionContainer.find_elements_by_css_selector("*")[0]
-admission = driver.find_element_by_class_name('hub-home ng-pristine ng-untouched ng-valid ng-not-empty')['admissions-tab']
-print('Admission: ' + str(admission))
-sleep(3)
-
-action = ActionChains(driver)
-action.move_to_element(admission)
-action.click().perform()
-
-
-# Couldn't find button element to click, so User will manually click instead temporarily
-while True:
-    try:
-        html = driver.page_source
-        soup = BeautifulSoup(html, features="html.parser")
-
-        container = soup.find('admissions-tab')
-
-        if not container.find('div').text == None:
-            print('FOUND ADMISSIONS')
-            break
-
-    except:
-        print('Admissions Page Not Open (Please click on Admissions)')
-        sleep(1)
-"""
+sleep(0.75)
 
 try:
     driver.find_element_by_class_name('hub-tooltip--favorite').find_element_by_class_name(
@@ -118,20 +84,15 @@ try:
 except:
     pass
 
-sleep(1)
+sleep(0.75)
 
 driver.find_element_by_class_name('hubs-top-tabs-bar').find_elements_by_class_name('hubs-top-tabs')[3].send_keys(
     Keys.RETURN)
 
-sleep(1)
-
-file_directory = 'C:/Users/jonat/PycharmProjects/Python-Tensorflow/CollegeML/College_Data/' + college.replace(' ',
-                                                                                                              '-') + '.txt'
+sleep(0.75)
 
 point_container = driver.find_element_by_class_name('nv-point-paths')
 points = point_container.find_elements_by_tag_name('path')
-
-# data_frame = pd.DataFrame(columns=['SAT', 'GPA', 'PLAN', 'ACCEPT'])
 
 sat_list = []
 gpa_list = []
@@ -181,8 +142,13 @@ for point in points:
     except:
         pass
 
-dir = 'College_Data/' + college.replace(' ', '-') + '.csv'
-#open(dir, 'w').close()
+
+html = driver.page_source
+soup = BeautifulSoup(html, features="html.parser")
+college_name = soup.find('hi', class_='masthead__name').replace('\n', '').lower()
+
+dir = 'College_Data/' + college_name.replace(' ', '-') + '.csv'
+open(dir, 'w').close()
 
 data_frame = pd.DataFrame({
     'SAT':sat_list,

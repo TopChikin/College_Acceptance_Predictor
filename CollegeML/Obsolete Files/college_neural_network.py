@@ -6,7 +6,6 @@ from tensorflow import keras
 import datetime
 from tensorflow_core.python.keras.callbacks import TensorBoard
 import numpy as np
-import matplotlib.pyplot as plt
 from CollegeML.data_store_class_2 import data_storage
 
 # tf.executing_eagerly()
