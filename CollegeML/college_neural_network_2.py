@@ -3,6 +3,7 @@ os.environ['TF_CPP_MIN_LOG_LEVEL'] = '3'  # removes debug info
 import tensorflow as tf
 from tensorflow import keras
 import datetime
+from time import sleep
 from tensorflow_core.python.keras.callbacks import TensorBoard
 import pandas as pd
 import numpy as np
@@ -10,7 +11,12 @@ import matplotlib.pyplot as plt
 
 tf.get_logger().setLevel('ERROR')
 
-college_file = 'james-madison-university.csv'
+with open('College_Data/colleges.txt', 'r') as file:
+    colleges = file.readlines()
+
+college_file = colleges[5].replace('\n', '')
+print(college_file)
+sleep(1.5)
 
 df = pd.read_csv('College_Data/' + college_file)
 
@@ -29,9 +35,9 @@ train_dataset = dataset.skip(index)
 
 
 model = keras.Sequential([
-    tf.keras.layers.Dense(32, activation='sigmoid'),
-    #tf.keras.layers.GaussianNoise(0.0001),
+    tf.keras.layers.GaussianNoise(0.0001),
     tf.keras.layers.BatchNormalization(),
+    tf.keras.layers.Dense(32, activation='relu'),
     tf.keras.layers.Dense(32),
     tf.keras.layers.Dense(32),
     tf.keras.layers.Dense(1, activation='sigmoid')
@@ -49,6 +55,7 @@ model.fit(
     #use_multiprocessing=True
 )
 
+print(f'Saving log to {log_dir}')
 dir = 'Tensorflow_Models\\' + college_file.replace('.csv', '')
 tf.keras.models.save_model(model, dir)
 

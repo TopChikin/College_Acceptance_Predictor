@@ -4,13 +4,22 @@ os.environ['TF_CPP_MIN_LOG_LEVEL'] = '3'  # removes debug info
 import tensorflow as tf
 from tensorflow import keras
 import datetime
+from time import sleep
 from tensorflow_core.python.keras.callbacks import TensorBoard
 import pandas as pd
 import numpy as np
 
 tf.get_logger().setLevel('ERROR')
 
-college_file = 'university-of-virginia-main-campus.csv'
+colleges = []
+
+with open('College_Data/colleges.txt', 'r') as file:
+    colleges = file.readlines()
+
+college_file = colleges[5].replace('\n', '')
+print(college_file)
+sleep(1)
+
 college_name = college_file.replace('.csv', '')
 dir = "Tensorflow_Models\\" + college_name
 
@@ -25,31 +34,24 @@ dataset = tf.data.Dataset.from_tensor_slices((train_x, df.pop('ACCEPT')))
 dataset = dataset.shuffle(len(df)).batch(4)
 
 ratio = 0.9
-index = int(len(df) * 0.1)
+index = int(len(df) * (1.00 - ratio))
 
 test_dataset = dataset.take(index)
 train_dataset = dataset.skip(index)
 
+log_dir = "logs\\fit\\" + datetime.datetime.now().strftime("%Y%m%d%H%M%S")
+tensorboard = TensorBoard(log_dir=log_dir)
+
+model.fit(
+    train_dataset,
+    validation_data=test_dataset,
+    epochs=256,
+    callbacks=[tensorboard],
+    #use_multiprocessing=True
+)
+
+print(f'Saving log to {log_dir}')
+dir = 'Tensorflow_Models\\' + college_file.replace('.csv', '')
+tf.keras.models.save_model(model, dir)
+
 loss, acc = model.evaluate(test_dataset)
-
-# 'ED': 1.0,
-# 'EA': 2.0,
-# 'RD': 3.0
-
-sat_list = np.array([1350, 1000, 1100, 1200, 1300, 1400, 1500, 1600])
-gpa_list = np.array([4.23, 4.25, 4.25, 4.25, 4.25, 4.25, 4.25, 4.25])
-plan_list = np.array([3.0, 3.0, 3.0, 3.0, 3.0, 3.0, 3.0, 3.0])
-
-sat_listn = sat_list / 1600.0
-gpa_listn = gpa_list / 5.00
-plan_listn = plan_list / 3.0
-
-np_list = np.array([sat_listn, gpa_listn, plan_listn])
-tensor = tf.transpose(np_list)
-
-pred = model.predict(tensor)
-
-for i in range(len(sat_list)):
-    print(f'{sat_list[i]}, {gpa_list[i]}, {plan_list[i]}, {round(round(float(pred[i]), 3) * 100, 2)}%')
-
-
