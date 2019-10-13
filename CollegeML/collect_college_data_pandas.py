@@ -1,8 +1,9 @@
 from bs4 import BeautifulSoup
 from selenium import webdriver as wd
 from selenium.webdriver.common.action_chains import ActionChains
-from time import sleep
 from selenium.webdriver.common.keys import Keys
+from time import sleep
+import pandas as pd
 
 # Group effort mostly by reece
 
@@ -13,8 +14,27 @@ with open(r'C:\Users\jonat\PycharmProjects\Python-Tensorflow\Creds\school_creds.
     password = creds_file.readline()
     school = creds_file.readline()
 
+# driver = wd.Chrome(r'C:\Users\jonat\PycharmProjects\Python-Tensorflow\VenvInstances\chromedriver.exe')
 driver = wd.Chrome()
 # driver.minimize_window()
+
+"""
+Setup driver / engine
+url = 'https://launchpad.classlink.com/loudoun%20?'
+driver.get(url)  # Access website
+
+driver.find_element_by_name("username").send_keys(username)  # Entering Username
+driver.find_element_by_name('password').send_keys(password)  # Entering Username
+driver.find_element_by_name('signin').click()
+sleep(2)
+driver.get('https://launchpad.classlink.com/browsersso/423078')
+while True:
+    try:
+        driver.find_element_by_class_name('js-btn-continue-to-site').click()
+        break
+    except:
+        sleep(0.5)
+"""
 
 driver.get('https://id.naviance.com')
 
@@ -38,6 +58,9 @@ driver.find_element_by_class_name('AuthMethod--label').click()
 driver.find_element_by_name('ctl00$ContentPlaceHolder1$UsernameTextBox').send_keys(username)
 driver.find_element_by_name('ctl00$ContentPlaceHolder1$PasswordTextBox').send_keys(password)
 # driver.find_element_by_name('ctl00$ContentPlaceHolder1$SubmitButton').send_keys(Keys.RETURN)
+
+# college = input()
+# college = 'virginia tech'
 
 sleep(1.25)
 
@@ -95,6 +118,8 @@ try:
 except:
     pass
 
+sleep(1)
+
 driver.find_element_by_class_name('hubs-top-tabs-bar').find_elements_by_class_name('hubs-top-tabs')[3].send_keys(
     Keys.RETURN)
 
@@ -103,58 +128,69 @@ sleep(1)
 file_directory = 'C:/Users/jonat/PycharmProjects/Python-Tensorflow/CollegeML/College_Data/' + college.replace(' ',
                                                                                                               '-') + '.txt'
 
-open(file_directory, 'w').close()
-with open(file_directory, 'w') as file:
-    """
-    OMG IT FINALLY WORKS -JONATHAN LE 1:27 AM 10/10/19
-    """
-    point_container = driver.find_element_by_class_name('nv-point-paths')
-    points = point_container.find_elements_by_tag_name('path')
+point_container = driver.find_element_by_class_name('nv-point-paths')
+points = point_container.find_elements_by_tag_name('path')
 
-    for point in points:
+# data_frame = pd.DataFrame(columns=['SAT', 'GPA', 'PLAN', 'ACCEPT'])
 
-        try:
+sat_list = []
+gpa_list = []
+plan_list = []
+accept_list = []
 
-            action = ActionChains(driver).move_to_element(point).perform()
+for point in points:
 
-            html = driver.page_source
-            soup = BeautifulSoup(html, features="html.parser")
-            data_point = soup.find('div', class_='xy-tooltip')
-            data = data_point.text
+    try:
 
-            if data.find('ACCEPTED') > -1 or data.find('DENIED') > -1:
-                data_list = []
+        action = ActionChains(driver).move_to_element(point).perform()
 
-                sat_score = data[data.find('SAT1600: ') + len('SAT1600: '): data.find(',')]
-                data_list.append(str(sat_score))
+        html = driver.page_source
+        soup = BeautifulSoup(html, features="html.parser")
+        data_point = soup.find('div', class_='xy-tooltip')
+        data = data_point.text
 
-                gpa = data[data.find('GPA: ') + len('GPA: '):]
-                data_list.append(str(gpa))
+        if data.find('ACCEPTED') > -1 or data.find('DENIED') > -1:
 
-                college_plan_dict = {
-                    'ED': 1,
-                    'EA': 2,
-                    'RD': 3
-                }
+            sat_score = float(data[data.find('SAT1600: ') + len('SAT1600: '): data.find(',')])
 
-                college_plan = college_plan_dict.get(data[data.find('(') + 1:data.find(')')], '-1')
-                data_list.append(str(college_plan))
+            gpa = float(data[data.find('GPA: ') + len('GPA: '):])
 
-                if data.find('ACCEPTED') > -1:
-                    acceptance = 1
-                elif data.find('DENIED') > -1:
-                    acceptance = 0
-                else:
-                    acceptance = -1
+            college_plan_dict = {
+                'ED': 1.0,
+                'EA': 2.0,
+                'RD': 3.0
+            }
 
-                data_list.append(str(acceptance))
-                data_to_write = ', '.join(data_list)
-                print('[ADDING TO FILE] --> ' + data)
-                file.write(data_to_write + '\n')
+            college_plan = float(college_plan_dict.get(data[data.find('(') + 1:data.find(')')], '-1'))
+
+            if data.find('ACCEPTED') > -1:
+                acceptance = 1.0
+            elif data.find('DENIED') > -1:
+                acceptance = 0.0
             else:
-                print('INCORRECT FORMAT --> ' + data)
-        except:
-            pass
+                acceptance = -1.0
+
+            print('[ADDING TO CSV] --> ' + data)
+            sat_list.append(sat_score)
+            gpa_list.append(gpa)
+            plan_list.append(college_plan)
+            accept_list.append(acceptance)
+
+        else:
+            print('INCORRECT FORMAT --> ' + data)
+    except:
+        pass
+
+dir = 'College_Data/' + college.replace(' ', '-') + '.csv'
+#open(dir, 'w').close()
+
+data_frame = pd.DataFrame({
+    'SAT':sat_list,
+    'GPA':gpa_list,
+    'PLAN':plan_list,
+    'ACCEPT':accept_list
+})
+data_frame.to_csv(dir)
 
 # print('CLOSING DRIVER')
 # driver.close()

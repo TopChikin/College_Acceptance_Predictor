@@ -1,0 +1,1 @@
+tensorboard --logdir="C:\Users\jonat\PycharmProjects\Python-Tensorflow\CollegeML\logs"

@@ -12,7 +12,6 @@ class data_storage:
         self.filename = filename
 
         with open('College_Data/' + filename, 'r') as file:
-
             for line in file.readlines():
                 applicant = []
 
@@ -39,7 +38,7 @@ class data_storage:
         train_index = int((length) * float)
 
         return (self.app_list[:train_index], self.app_accept[:train_index]), (
-        self.app_list[train_index:], self.app_accept[train_index:])
+            self.app_list[train_index:], self.app_accept[train_index:])
 
     def print_list(self):
         print(self.app_list)
@@ -84,7 +83,7 @@ class data_storage:
                 is_error = True
             elif app[2] > 3 or app[2] < 1:
                 is_error = True
-            elif app[3] > 1 or app[3] < 0:
+            elif self.app_accept[list_index] > 1 or self.app_accept[list_index] < 0:
                 is_error = True
 
             if is_error == True:

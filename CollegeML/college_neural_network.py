@@ -12,7 +12,7 @@ from CollegeML.data_store_class_2 import data_storage
 # tf.executing_eagerly()
 
 
-college_data = data_storage('text.txt')
+college_data = data_storage('temp.txt')
 
 (train_x, train_y), (test_x, test_y) = college_data.get_train_data(0.90)
 
@@ -34,43 +34,61 @@ train_y = np.array(train_y)
 test_x = np.array(test_x)
 test_y = np.array(test_y)
 
+# train_x = tf.convert_to_tensor(train_x)
+# train_y = tf.convert_to_tensor(train_y)
+# test_x = tf.convert_to_tensor(test_x)
+# test_y = tf.convert_to_tensor(test_y)
 
-# flatten data
+train_dataset = tf.data.Dataset.from_tensor_slices((train_x, train_y)).batch(3)
+test_dataset = tf.data.Dataset.from_tensor_slices((test_x, test_y)).batch(3)
 
-train_x = tf.convert_to_tensor(train_x)
-train_y = tf.convert_to_tensor(train_y)
-test_x = tf.convert_to_tensor(test_x)
-test_y = tf.convert_to_tensor(test_y)
-
-
-train_dataset = tf.data.Dataset.from_tensor_slices((train_x, train_y))
-test_dataset = tf.data.Dataset.from_tensor_slices((test_x, test_y))
+print(train_dataset)
 
 #print(train_x[0])
 
 model = keras.Sequential([
-    keras.layers.Dense(3, input_shape=(1, )),
-    keras.layers.Dense(32),
-    keras.layers.Dense(32),
+    keras.layers.Flatten(input_shape=(3, )),
+    #keras.layers.Dense(3),
+    keras.layers.Dense(32, activation = 'relu'),
     keras.layers.Dense(1, activation='sigmoid')
 ])
+
 log_dir = "logs\\fit\\" + datetime.datetime.now().strftime("%Y%m%d-%H%M%S")
 #open(log_dir, 'w').close()
 tensorboard = TensorBoard(log_dir=log_dir)
 
 
-model.compile(optimizer='SGD', loss='mean_squared_error', metrics=['accuracy'])
+model.compile(optimizer='adadelta', loss='mean_squared_error', metrics=['accuracy'])
 history = model.fit(
     train_dataset,
-    epochs=8,
-    validation_data=test_dataset,
+    epochs=24,
+    #validation_data=test_dataset,
     verbose=1,
     callbacks=[tensorboard]
 )
 
-prediction = model.predict(test_dataset)
-for i in range(10):
-    print(str(test_x[i]) + ',  ' + str(prediction[i]) + ', ' + str(test_y[i]))
+loss, acc = model.evaluate(test_dataset)
+print("Tested Accuracy: " + str(acc))
 
-#python C:\Users\jonat\PycharmProjects\Python-Tensorflow\VenvInstances\TensorVenvGPU\Lib\site-packages\tensorboard\main.py --logdir=C:\Users\jonat\PycharmProjects\Python-Tensorflow\CollegeML\logs\fit
-#C:\Users\jonat\PycharmProjects\Python-Tensorflow\VenvInstances\TensorVenvGPU\scripts\tensorboard.exe --logdir=C:\Users\jonat\PycharmProjects\Python-Tensorflow\CollegeML\logs\fit
+# 'ED': 1,
+# 'EA': 2,
+# 'RD': 3
+
+# sat = input('SAT: ')
+# gpa = input('GPA: ')
+# plan = input('PLAN: ')
+sat = 1350
+gpa = 4.23
+plan = 2
+
+app = []
+app.append(int(sat))
+app.append(float(gpa))
+app.append(int(plan))
+
+app = np.array(app)
+
+predict = model.predict(test_x)
+
+for i in range(10):
+    print(str(test_x[i]) + ', ' + str(np.argmax(predict[i])) + ', ' + str(test_y[i]))
