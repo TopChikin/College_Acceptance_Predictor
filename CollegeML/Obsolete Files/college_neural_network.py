@@ -74,8 +74,8 @@ print("Tested Accuracy: " + str(acc))
 # 'RD': 3
 
 # sat = input('SAT: ')
-# gpa = input('GPA: ')
-# plan = input('PLAN: ')
+# # gpa = input('GPA: ')
+# # plan = input('PLAN: ')
 sat = 1350
 gpa = 4.23
 plan = 2

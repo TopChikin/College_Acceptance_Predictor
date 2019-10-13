@@ -62,7 +62,7 @@ driver.find_element_by_name('ctl00$ContentPlaceHolder1$PasswordTextBox').send_ke
 # college = input()
 # college = 'virginia tech'
 
-sleep(0.75)
+sleep(1.25)
 
 searchbar = driver.find_element_by_name('query')
 searchbar.send_keys(college)
@@ -93,6 +93,17 @@ sleep(0.75)
 
 point_container = driver.find_element_by_class_name('nv-point-paths')
 points = point_container.find_elements_by_tag_name('path')
+
+html = driver.page_source
+soup = BeautifulSoup(html, features="html.parser")
+college_name = soup.find('h1', class_='masthead__name ng-binding').text.replace('\n', '').lower()
+
+while college_name[-1:] == ' ':
+    college_name = college_name[:-1]
+
+college_name = college_name.replace(' ', '-')
+
+print(college_name)
 
 sat_list = []
 gpa_list = []
@@ -142,12 +153,7 @@ for point in points:
     except:
         pass
 
-
-html = driver.page_source
-soup = BeautifulSoup(html, features="html.parser")
-college_name = soup.find('hi', class_='masthead__name').replace('\n', '').lower()
-
-dir = 'College_Data/' + college_name.replace(' ', '-') + '.csv'
+dir = 'College_Data/' + college_name + '.csv'
 open(dir, 'w').close()
 
 data_frame = pd.DataFrame({
@@ -158,5 +164,13 @@ data_frame = pd.DataFrame({
 })
 data_frame.to_csv(dir)
 
-# print('CLOSING DRIVER')
-# driver.close()
+college_list = open('College_Data/colleges.txt', 'r').readlines()
+college_list.append(college_name + '.csv\n')
+college_list = sorted(college_list)
+open('College_Data/colleges.txt', 'w').close()
+with open('College_Data/colleges.txt', 'w') as file:
+    for word in college_list:
+        file.write(word)
+
+print('CLOSING DRIVER')
+driver.close()

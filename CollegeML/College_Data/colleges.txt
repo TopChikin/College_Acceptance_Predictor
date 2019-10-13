@@ -1,0 +1,6 @@
+george-mason-university.csv
+georgia-institute-of-technology.csv
+harvard-college.csv
+james-madison-university.csv
+university-of-virginia-main-campus.csv
+virginia-polytechnic-institute-and-state-university.csv
