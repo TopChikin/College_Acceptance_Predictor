@@ -14,7 +14,7 @@ tf.get_logger().setLevel('ERROR')
 with open('College_Data/colleges.txt', 'r') as file:
     colleges = file.readlines()
 
-college_file = colleges[2].replace('\n', '')
+college_file = colleges[16].replace('\n', '')
 print(college_file)
 sleep(0.25)
 
@@ -40,14 +40,16 @@ model = keras.Sequential([
     #tf.keras.layers.GaussianNoise(0.0001),
     tf.keras.layers.BatchNormalization(),
     tf.keras.layers.Dense(16, activation='relu', kernel_regularizer=tf.keras.regularizers.l2(l=0.001)),
+    tf.keras.layers.Dropout(0.5),
     tf.keras.layers.Dense(16, kernel_regularizer=tf.keras.regularizers.l2(l=0.001)),
+    tf.keras.layers.Dropout(0.5),
     tf.keras.layers.Dense(1, activation='sigmoid')
 ])
 
 log_dir = "logs\\" + datetime.datetime.now().strftime("[%b-%d-%Y]_[%I.%M.%S-%p]")
 tensorboard = TensorBoard(log_dir=log_dir)
 
-model.compile(optimizer=tf.optimizers.SGD(learning_rate=0.01, momentum=0.9), loss='mean_squared_error', metrics=['accuracy'])
+model.compile(optimizer=tf.optimizers.SGD(learning_rate=0.01, momentum=0.9), loss='mean_squared_error', metrics=['accuracy', tf.metrics.Precision()])
 model.fit(
     train_dataset,
     validation_data=test_dataset,
@@ -56,8 +58,8 @@ model.fit(
     #use_multiprocessing=True
 )
 
-print(f'Saving log to {log_dir}')
+print(f'\n[Saving log to {log_dir}]')
 dir = 'Tensorflow_Models\\' + college_file.replace('.csv', '')
 tf.keras.models.save_model(model, dir)
 
-loss, acc = model.evaluate(test_dataset)
+loss, acc, prec = model.evaluate(test_dataset)

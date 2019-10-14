@@ -15,7 +15,7 @@ colleges = []
 with open('College_Data/colleges.txt', 'r') as file:
     colleges = file.readlines()
 
-college_file = colleges[2].replace('\n', '')
+college_file = colleges[16].replace('\n', '')
 print(college_file)
 sleep(0.25)
 
@@ -42,7 +42,7 @@ index = int(len(df) * 0.1)
 test_dataset = dataset.take(index)
 train_dataset = dataset.skip(index)
 
-loss, acc = model.evaluate(test_dataset)
+loss, acc, pred = model.evaluate(test_dataset)
 
 def predict(sat_list, gpa_list, plan_list):
     sat_listn = sat_list / 1600.0
