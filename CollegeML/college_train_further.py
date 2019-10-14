@@ -16,7 +16,7 @@ colleges = []
 with open('College_Data/colleges.txt', 'r') as file:
     colleges = file.readlines()
 
-college_file = colleges[5].replace('\n', '')
+college_file = colleges[17].replace('\n', '')
 print(college_file)
 sleep(1)
 
@@ -27,7 +27,11 @@ model = tf.keras.models.load_model(dir)
 
 df = pd.read_csv('College_Data/' + college_file)
 
-train_x = tf.convert_to_tensor(np.array([df.pop('SAT') / 1600.0, df.pop('GPA') / 5.00, df.pop('PLAN') / 3.0]))
+train_x = tf.convert_to_tensor(np.array([
+    df.pop('SAT') / 1600.0,
+    df.pop('GPA') / 5.00,
+    #df.pop('PLAN') / 3.0
+]))
 train_x = tf.transpose(train_x)
 
 dataset = tf.data.Dataset.from_tensor_slices((train_x, df.pop('ACCEPT')))
@@ -47,7 +51,7 @@ model.fit(
     validation_data=test_dataset,
     epochs=256,
     callbacks=[tensorboard],
-    #use_multiprocessing=True
+    # use_multiprocessing=True
 )
 
 print(f'Saving log to {log_dir}')
