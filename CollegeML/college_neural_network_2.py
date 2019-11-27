@@ -11,10 +11,12 @@ import matplotlib.pyplot as plt
 
 tf.get_logger().setLevel('ERROR')
 
+college_id = 14
+
 with open('College_Data/colleges.txt', 'r') as file:
     colleges = file.readlines()
 
-college_file = colleges[16].replace('\n', '')
+college_file = colleges[college_id - 1].replace('\n', '')
 print(college_file)
 sleep(0.25)
 

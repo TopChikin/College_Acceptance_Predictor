@@ -11,12 +11,14 @@ import numpy as np
 
 tf.get_logger().setLevel('ERROR')
 
+college_id = 14
+
 colleges = []
 
 with open('College_Data/colleges.txt', 'r') as file:
     colleges = file.readlines()
 
-college_file = colleges[17].replace('\n', '')
+college_file = colleges[college_id - 1].replace('\n', '')
 print(college_file)
 sleep(1)
 
@@ -58,4 +60,4 @@ print(f'Saving log to {log_dir}')
 dir = 'Tensorflow_Models\\' + college_file.replace('.csv', '')
 tf.keras.models.save_model(model, dir)
 
-loss, acc = model.evaluate(test_dataset)
+#loss, acc = model.evaluate(test_dataset)

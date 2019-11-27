@@ -1,4 +1,5 @@
 carnegie-mellon-university.csv
+christopher-newport-university.csv
 clemson-university.csv
 college-of-william-and-mary.csv
 george-mason-university.csv

@@ -53,7 +53,9 @@ for char in school:
 sleep(0.75)
 driver.find_element_by_id('react-autowhatever-1--item-0').click()
 
+sleep(0.75)
 driver.find_element_by_class_name('AuthMethod--label').click()
+
 
 driver.find_element_by_name('ctl00$ContentPlaceHolder1$UsernameTextBox').send_keys(username)
 driver.find_element_by_name('ctl00$ContentPlaceHolder1$PasswordTextBox').send_keys(password)
