@@ -3,6 +3,7 @@ os.environ['TF_CPP_MIN_LOG_LEVEL'] = '3'  # removes debug info
 import tensorflow as tf
 from tensorflow import keras
 import datetime
+import math
 from time import sleep
 from tensorflow_core.python.keras.callbacks import TensorBoard
 import pandas as pd
@@ -15,7 +16,7 @@ colleges = []
 with open('College_Data/colleges.txt', 'r') as file:
     colleges = file.readlines()
 
-college_file = colleges[16].replace('\n', '')
+college_file = colleges[15].replace('\n', '')
 print(college_file)
 sleep(0.25)
 
@@ -68,52 +69,60 @@ def predict(sat_list, gpa_list, plan_list):
 # 'EA': 2.0,
 # 'RD': 3.0
 
-sat_list = np.array([1300, 1300, 1300, 1300, 1300, 1300, 1300, 1300])
-gpa_list = np.array([3.40, 3.60, 3.80, 4.00, 4.20, 4.40, 4.60, 4.80])
-plan_list = np.array([3.0, 3.0, 3.0, 3.0, 3.0, 3.0, 3.0, 3.0])
-
-predict(sat_list, gpa_list, plan_list)
-
-print('\n')
-
-sat_list = np.array([900, 1000, 1100, 1200, 1300, 1400, 1500, 1600])
-gpa_list = np.array([4.00, 4.00, 4.00, 4.00, 4.00, 4.00, 4.00, 4.00])
-plan_list = np.array([3.0, 3.0, 3.0, 3.0, 3.0, 3.0, 3.0, 3.0])
-
-predict(sat_list, gpa_list, plan_list)
-
-print('\n')
-
-sat_list = np.array([900, 1000, 1100, 1200, 1300, 1400, 1500, 1600])
-gpa_list = np.array([3.60, 3.80, 4.00, 4.20, 4.40, 4.60, 4.80, 5.00])
-plan_list = np.array([3.0, 3.0, 3.0, 3.0, 3.0, 3.0, 3.0, 3.0])
-
-predict(sat_list, gpa_list, plan_list)
-
-print('\n')
-
-# sat_list = np.array([1200, 1200, 1200, 1300, 1300, 1300, 1400, 1400, 1400, 1500, 1500, 1500])
-# gpa_list = np.array([3.80, 3.80, 3.80, 4.00, 4.00, 4.00, 4.20, 4.20, 4.20, 4.40, 4.40, 4.40])
-# plan_list = np.array([1.0, 2.0, 3.0, 1.0, 2.0, 3.0, 1.0, 2.0, 3.0, 1.0, 2.0, 3.0])
+# sat_list = np.array([1300, 1300, 1300, 1300, 1300, 1300, 1300, 1300])
+# gpa_list = np.array([3.40, 3.60, 3.80, 4.00, 4.20, 4.40, 4.60, 4.80])
+# plan_list = np.array([3.0, 3.0, 3.0, 3.0, 3.0, 3.0, 3.0, 3.0])
 #
 # predict(sat_list, gpa_list, plan_list)
 #
 # print('\n')
-
-# sat_list = np.array([1350, 1350, 1350])
-# gpa_list = np.array([4.23, 4.23, 4.23])
-# plan_list = np.array([1.0, 2.0, 3.0])
+#
+# sat_list = np.array([900, 1000, 1100, 1200, 1300, 1400, 1500, 1600])
+# gpa_list = np.array([4.00, 4.00, 4.00, 4.00, 4.00, 4.00, 4.00, 4.00])
+# plan_list = np.array([3.0, 3.0, 3.0, 3.0, 3.0, 3.0, 3.0, 3.0])
 #
 # predict(sat_list, gpa_list, plan_list)
 #
 # print('\n')
+#
+# sat_list = np.array([900, 1000, 1100, 1200, 1300, 1400, 1500, 1600])
+# gpa_list = np.array([3.60, 3.80, 4.00, 4.20, 4.40, 4.60, 4.80, 5.00])
+# plan_list = np.array([3.0, 3.0, 3.0, 3.0, 3.0, 3.0, 3.0, 3.0])
+#
+# predict(sat_list, gpa_list, plan_list)
+#
+# print('\n')
+#
+# sat_list = np.array([1300, 1500, 1350])
+# gpa_list = np.array([3.6, 4.20, 4.23])
+# plan_list = np.array([2.0, 2.0, 2.0])
+#
+# predict(sat_list, gpa_list, plan_list)
 
-sat_list = np.array([1300, 1500, 1350])
-gpa_list = np.array([3.6, 4.20, 4.23])
-plan_list = np.array([2.0, 2.0, 2.0])
+sat_inc = 10
+gpa_inc = 0.1
+sat_sample = int(round(1600 / sat_inc, 0)) + 1
+gpa_sample = int(round(5.00 / gpa_inc, 3)) + 1
 
-predict(sat_list, gpa_list, plan_list)
+population = []
+sat = 0
+gpa = 0
+for i in range(sat_sample):
+    for c in range(gpa_sample):
+        data_point = [int(round(sat, 0)), round(gpa, 3)]
+        population.append(data_point)
+        gpa += gpa_inc
+    gpa = 0
+    sat += sat_inc
 
+print(population)
 
+pred_list = np.array(population)
 
+tensor = tf.convert_to_tensor(pred_list)
+
+pred = model.predict(tensor)
+
+# print(pred)
+for i in range():
 

@@ -1,7 +1,5 @@
 /Creds/school_creds.txt
-/VenvInstances/TensorVenvGPU/
-/VenvInstances/TensorVenv/
-/VenvInstances/chromedriver.exe
+*/VenvInstances/*/
 /.idea/
 /.idea/
 /CollegeML/logs/
