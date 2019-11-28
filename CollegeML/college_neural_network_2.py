@@ -11,7 +11,7 @@ import matplotlib.pyplot as plt
 
 tf.get_logger().setLevel('ERROR')
 
-college_id = 11
+college_id = int(input('College ID: '))
 
 with open('College_Data/colleges.txt', 'r') as file:
     colleges = file.readlines()
@@ -55,7 +55,7 @@ model.compile(optimizer=tf.optimizers.SGD(learning_rate=0.01, momentum=0.9), los
 model.fit(
     train_dataset,
     validation_data=test_dataset,
-    epochs=64,
+    epochs=16,
     callbacks=[tensorboard],
     #use_multiprocessing=True
 )

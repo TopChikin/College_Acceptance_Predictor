@@ -11,8 +11,7 @@ import numpy as np
 
 tf.get_logger().setLevel('ERROR')
 
-college_id = 13
-
+college_id = int(input('College ID: '))
 colleges = []
 
 with open('College_Data/colleges.txt', 'r') as file:
@@ -51,7 +50,7 @@ tensorboard = TensorBoard(log_dir=log_dir)
 model.fit(
     train_dataset,
     validation_data=test_dataset,
-    epochs=256,
+    epochs=48,
     callbacks=[tensorboard],
     # use_multiprocessing=True
 )
