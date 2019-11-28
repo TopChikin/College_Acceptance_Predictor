@@ -169,7 +169,8 @@ data_frame = pd.DataFrame({
 data_frame.to_csv(dir)
 
 college_list = open('College_Data/colleges.txt', 'r').readlines()
-college_list.append(college_name + '.csv\n')
+if f'{college_name}.csv\n' not in college_list:
+    college_list.append(college_name + '.csv\n')
 college_list = sorted(college_list)
 open('College_Data/colleges.txt', 'w').close()
 with open('College_Data/colleges.txt', 'w') as file:

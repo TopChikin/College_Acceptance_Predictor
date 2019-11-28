@@ -11,7 +11,7 @@ import matplotlib.pyplot as plt
 
 tf.get_logger().setLevel('ERROR')
 
-college_id = 14
+college_id = 11
 
 with open('College_Data/colleges.txt', 'r') as file:
     colleges = file.readlines()

@@ -1,22 +1,16 @@
 import os
 os.environ['TF_CPP_MIN_LOG_LEVEL'] = '3'  # removes debug info
 import tensorflow as tf
-from tensorflow import keras
-import datetime
-import math
 from time import sleep
-from tensorflow_core.python.keras.callbacks import TensorBoard
 import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
-import matplotlib.colors as col
 
 tf.get_logger().setLevel('ERROR')
 
-college_id = 14
+college_id = 19
 
 colleges = []
-
 
 with open('College_Data/colleges.txt', 'r') as file:
     colleges = file.readlines()
@@ -36,8 +30,8 @@ df = pd.read_csv('College_Data/' + college_file)
 train_x = tf.convert_to_tensor(
     np.array([df.pop('SAT') / 1600.0,
               df.pop('GPA') / 5.00,
-              #df.pop('PLAN') / 3.0
-]))
+              # df.pop('PLAN') / 3.0
+              ]))
 train_x = tf.transpose(train_x)
 
 dataset = tf.data.Dataset.from_tensor_slices((train_x, df.pop('ACCEPT')))
@@ -51,6 +45,7 @@ train_dataset = dataset.skip(index)
 
 loss, acc, pred = model.evaluate(test_dataset)
 
+
 def predict(sat_list, gpa_list, plan_list):
     sat_listn = sat_list / 1600.0
     gpa_listn = gpa_list / 5.00
@@ -58,7 +53,7 @@ def predict(sat_list, gpa_list, plan_list):
 
     np_list = np.array([sat_listn,
                         gpa_listn,
-                        #plan_listn
+                        # plan_listn
                         ])
     tensor = tf.transpose(np_list)
 
@@ -67,9 +62,10 @@ def predict(sat_list, gpa_list, plan_list):
     for i in range(len(sat_list)):
         print(f'{sat_list[i]},'
               f' {gpa_list[i]}, -'
-              #f' {plan_list[i]},'
+              # f' {plan_list[i]},'
               f' [{round(round(float(pred[i]), 3) * 100, 2)}%]'
               )
+
 
 # 'ED': 1.0,
 # 'EA': 2.0,
@@ -105,14 +101,13 @@ p = []
 predl = []
 for i in pred:
     if i < 0.5:
-        color = [round(1, round_val), round((2 * i[0] )/ 1.0, round_val), 0.0]
+        color = [round(1, round_val), round((2 * i[0]) / 1.0, round_val), 0.0]
     else:
         color = [round(2 * (1.0 - i[0]) / 1.0, round_val), round(1, round_val), 0.0]
     p.append(color)
     predl.append(i[0])
-
-xp, yp = tf.transpose([(1350, 4.23)])
-
+personal_scores = [(1350, 4.23)]
+xp, yp = tf.transpose(personal_scores)
 
 df = pd.read_csv('College_Data/' + college_file)
 
@@ -138,29 +133,40 @@ for i in df.pop('GPA'):
     if float(i) > gmax:
         gmax = float(i)
 
+figure = plt.figure(college_name.upper(), figsize=(12, 5))
 
-figure = plt.figure(college_name.upper(), figsize=(6, 9))
-
-axis2 = plt.subplot(2, 1, 1)
+axis2 = figure.add_subplot(1, 2, 1)
+plt.xlabel('SAT - [0 - 1600]')
+plt.ylabel('GPA - [0 - 5.00]')
 axis2.scatter(x * 1600, y * 5.00, alpha=1, c=p, s=1, marker='.')
-plt.scatter(xp, yp, c=[(0.25, 0, 1)], alpha=0.7, s=25, marker='D')
+personal_ax = plt.scatter(xp, yp, c=[(0.25, 0, 1)], alpha=0.7, s=25, marker='D')
+for i in personal_scores:
+    xp, yp = i
+    xp += 10
+    yp += 0.05
+    plt.annotate(str(i), xy=(xp, yp))
 plt.title('Acceptance Pattern\nFULL RANGE')
 
-axis = figure.add_subplot(2, 1, 2)
+axis = figure.add_subplot(1, 2, 2)
+plt.xlabel(f'SAT - [{min} - {max}]')
+plt.ylabel(f'GPA - [{gmin} - {gmax}]')
 axis.scatter(x * 1600, y * 5.00, alpha=1, c=p, s=35, marker='o')
-plt.scatter(xp, yp, c=[(0.25, 0, 1)], alpha=0.7, s=25, marker='D')
+personal_ax = plt.scatter(xp, yp, c=[(0.25, 0, 1)], alpha=0.7, s=25, marker='D')
+for i in personal_scores:
+    xp, yp = i
+    xp += 20
+    yp += 0.05
+    plt.annotate(str(i), xy=(xp, yp))
 plt.xlim(min, max)
 plt.ylim(gmin, gmax)
 
 plt.title('Acceptance Patten\nLIMITED TO MIN & MAX')
 
+personal_pred = model.predict(personal_scores)
+
+for i in range(len(personal_scores)):
+    print(f"{personal_scores[i]}: {round(round(float(personal_pred[i]), 3) * 100, 2)}%")
+
 print('GRAPHING')
 
 plt.show()
-
-
-
-
-
-
-

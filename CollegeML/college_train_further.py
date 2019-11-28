@@ -11,7 +11,7 @@ import numpy as np
 
 tf.get_logger().setLevel('ERROR')
 
-college_id = 14
+college_id = 13
 
 colleges = []
 
