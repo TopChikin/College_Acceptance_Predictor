@@ -38,7 +38,7 @@ while True:
 
 driver.get('https://id.naviance.com')
 
-sleep(0.75)
+sleep(1)
 
 html = driver.page_source
 soup = BeautifulSoup(html, features='html.parser')
@@ -50,19 +50,27 @@ for char in school:
     input.send_keys(char)
     sleep(0.007)
 
-sleep(0.75)
+sleep(1)
 driver.find_element_by_id('react-autowhatever-1--item-0').click()
 
-sleep(0.75)
+sleep(1)
 driver.find_element_by_class_name('AuthMethod--label').click()
 
+sleep(1.5)
 
-driver.find_element_by_name('ctl00$ContentPlaceHolder1$UsernameTextBox').send_keys(username)
-driver.find_element_by_name('ctl00$ContentPlaceHolder1$PasswordTextBox').send_keys(password)
+driver.find_element_by_name('loginfmt').send_keys(username)
+driver.find_element_by_name('passwd').send_keys(password)
+
+sleep(1.5)
+
+driver.find_element_by_class_name('btn-primary').click()
+# driver.find_element_by_id('idSIButton9').submit()
 # driver.find_element_by_name('ctl00$ContentPlaceHolder1$SubmitButton').send_keys(Keys.RETURN)
 
-# college = input()
-# college = 'virginia tech'
+try:
+    driver.find_element_by_id('idBtn_Back').click()
+except:
+    pass
 
 sleep(1.25)
 
@@ -71,7 +79,7 @@ searchbar.send_keys(college)
 searchbar.submit()
 
 
-sleep(0.75)
+sleep(1)
 
 html = driver.page_source
 soup = BeautifulSoup(html, features="html.parser")
@@ -80,7 +88,7 @@ button = collegeContainer.find('a', class_='components-ClickHOC-styles-medium')
 driver.get('https://student.naviance.com' + button['href'])
 
 # driver.get('https://student.naviance.com/colleges/profiles/a9913880-fac5-461a-8ab0-efcb22a683b5#!/Overview')
-sleep(0.75)
+sleep(1.25)
 
 try:
     driver.find_element_by_class_name('hub-tooltip--favorite').find_element_by_class_name(
@@ -88,12 +96,12 @@ try:
 except:
     pass
 
-sleep(0.75)
+sleep(1)
 
 driver.find_element_by_class_name('hubs-top-tabs-bar').find_elements_by_class_name('hubs-top-tabs')[3].send_keys(
     Keys.RETURN)
 
-sleep(0.75)
+sleep(1.25)
 
 point_container = driver.find_element_by_class_name('nv-point-paths')
 points = point_container.find_elements_by_tag_name('path')

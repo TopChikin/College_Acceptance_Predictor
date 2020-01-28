@@ -8,7 +8,6 @@ georgia-institute-of-technology.csv
 harvard-college.csv
 james-madison-university.csv
 pennsylvania-state-university-main-campus.csv
-rochester-institute-of-technology.csv
 university-of-maryland-college-park.csv
 university-of-michigan-ann-arbor.csv
 university-of-north-carolina-at-chapel-hill.csv
