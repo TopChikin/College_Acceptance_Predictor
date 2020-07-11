@@ -7,9 +7,15 @@ import pandas as pd
 
 # Group effort mostly by reece
 
-college = input('College: ')
+# college = input('College: ')
 
-with open(r'C:\Users\jonat\PycharmProjects\Python-Tensorflow\Creds\school_creds.txt', 'r') as creds_file:
+sleep_short = 1.25
+sleep_med = 2
+sleep_long = 3
+
+college = 'virginia tech'
+
+with open(r'..\Creds\school_creds.txt', 'r') as creds_file:
     username = creds_file.readline()
     password = creds_file.readline()
     school = creds_file.readline()
@@ -38,7 +44,7 @@ while True:
 
 driver.get('https://id.naviance.com')
 
-sleep(1)
+sleep(sleep_short)
 
 html = driver.page_source
 soup = BeautifulSoup(html, features='html.parser')
@@ -50,18 +56,18 @@ for char in school:
     input.send_keys(char)
     sleep(0.007)
 
-sleep(1)
+sleep(sleep_long)
 driver.find_element_by_id('react-autowhatever-1--item-0').click()
 
-sleep(1)
+sleep(sleep_short)
 driver.find_element_by_class_name('AuthMethod--label').click()
 
-sleep(1.5)
+sleep(sleep_long)
 
 driver.find_element_by_name('loginfmt').send_keys(username)
 driver.find_element_by_name('passwd').send_keys(password)
 
-sleep(1.5)
+sleep(sleep_med)
 
 driver.find_element_by_class_name('btn-primary').click()
 # driver.find_element_by_id('idSIButton9').submit()
@@ -72,14 +78,13 @@ try:
 except:
     pass
 
-sleep(1.25)
+sleep(sleep_short)
 
 searchbar = driver.find_element_by_name('query')
 searchbar.send_keys(college)
 searchbar.submit()
 
-
-sleep(1)
+sleep(sleep_short)
 
 html = driver.page_source
 soup = BeautifulSoup(html, features="html.parser")
@@ -88,7 +93,7 @@ button = collegeContainer.find('a', class_='components-ClickHOC-styles-medium')
 driver.get('https://student.naviance.com' + button['href'])
 
 # driver.get('https://student.naviance.com/colleges/profiles/a9913880-fac5-461a-8ab0-efcb22a683b5#!/Overview')
-sleep(1.25)
+sleep(sleep_short)
 
 try:
     driver.find_element_by_class_name('hub-tooltip--favorite').find_element_by_class_name(
@@ -96,19 +101,22 @@ try:
 except:
     pass
 
-sleep(1)
+sleep(sleep_long)
 
-driver.find_element_by_class_name('hubs-top-tabs-bar').find_elements_by_class_name('hubs-top-tabs')[3].send_keys(
+driver.find_element_by_class_name('navbar-tabs').find_element_by_xpath(
+    "//div[@role = 'tablist']").find_elements_by_tag_name('a')[3].send_keys(
     Keys.RETURN)
 
-sleep(1.25)
+sleep(sleep_long)
 
 point_container = driver.find_element_by_class_name('nv-point-paths')
 points = point_container.find_elements_by_tag_name('path')
 
+sleep(sleep_long)
+
 html = driver.page_source
 soup = BeautifulSoup(html, features="html.parser")
-college_name = soup.find('h1', class_='masthead__name ng-binding').text.replace('\n', '').lower()
+college_name = soup.find('h1', class_='school-name-container').find('div').text.replace('\n', '').lower()
 
 while college_name[-1:] == ' ':
     college_name = college_name[:-1]
@@ -122,7 +130,11 @@ gpa_list = []
 plan_list = []
 accept_list = []
 
+sleep(sleep_med)
+
 for point in points:
+
+    #print(point)
 
     try:
 
@@ -130,11 +142,12 @@ for point in points:
 
         html = driver.page_source
         soup = BeautifulSoup(html, features="html.parser")
-        data_point = soup.find('div', class_='xy-tooltip')
+        data_point = soup.find(class_='nvtooltip xy-tooltip')
+        #print(f'printing {data_point}')
         data = data_point.text
 
         if data.find('ACCEPTED') > -1 or data.find('DENIED') > -1:
-
+            print('inside')
             sat_score = float(data[data.find('SAT1600: ') + len('SAT1600: '): data.find(',')])
 
             gpa = float(data[data.find('GPA: ') + len('GPA: '):])
@@ -159,20 +172,18 @@ for point in points:
             gpa_list.append(gpa)
             plan_list.append(college_plan)
             accept_list.append(acceptance)
-
         else:
             print('INCORRECT FORMAT --> ' + data)
-    except:
-        pass
+    except Exception as e: print(e)
 
 dir = 'College_Data/' + college_name + '.csv'
 open(dir, 'w').close()
 
 data_frame = pd.DataFrame({
-    'SAT':sat_list,
-    'GPA':gpa_list,
-    'PLAN':plan_list,
-    'ACCEPT':accept_list
+    'SAT': sat_list,
+    'GPA': gpa_list,
+    'PLAN': plan_list,
+    'ACCEPT': accept_list
 })
 data_frame.to_csv(dir)
 
