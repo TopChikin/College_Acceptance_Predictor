@@ -14,5 +14,7 @@ matplotlib
 numpy
 
 Check APIs for more information on how to install
+
+/Creds/school_creds.txt - enter creds on each line - email, password, school
   
   
