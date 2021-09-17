@@ -12,7 +12,7 @@ college_id = int(input('College ID: '))
 
 colleges = []
 
-with open('College_Data/colleges.txt', 'r') as file:
+with open('./College_Data/colleges.txt', 'r') as file:
     colleges = file.readlines()
 
 college_file = colleges[college_id - 1].replace('\n', '')
@@ -21,7 +21,7 @@ sleep(0.25)
 print('EVALUATING DATA')
 
 college_name = college_file.replace('.csv', '')
-dir = "Tensorflow_Models\\" + college_name
+dir = "Tensorflow_Models/" + college_name
 
 model = tf.keras.models.load_model(dir)
 

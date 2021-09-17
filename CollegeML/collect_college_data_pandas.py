@@ -9,7 +9,7 @@ import pandas as pd
 
 college = input('College: ')
 
-with open(r'C:\Users\jonat\PycharmProjects\Python-Tensorflow\Creds\school_creds.txt', 'r') as creds_file:
+with open(r'./Creds/school_creds.txt', 'r') as creds_file:
     username = creds_file.readline()
     password = creds_file.readline()
     school = creds_file.readline()
@@ -17,6 +17,7 @@ with open(r'C:\Users\jonat\PycharmProjects\Python-Tensorflow\Creds\school_creds.
 # driver = wd.Chrome(r'C:\Users\jonat\PycharmProjects\Python-Tensorflow\VenvInstances\chromedriver.exe')
 driver = wd.Chrome()
 # driver.minimize_window()
+driver.maximize_window()
 
 """
 Setup driver / engine
@@ -56,23 +57,24 @@ driver.find_element_by_id('react-autowhatever-1--item-0').click()
 sleep(1)
 driver.find_element_by_class_name('AuthMethod--label').click()
 
-sleep(1.5)
+sleep(2)
 
 driver.find_element_by_name('loginfmt').send_keys(username)
 driver.find_element_by_name('passwd').send_keys(password)
 
 sleep(1.5)
 
-driver.find_element_by_class_name('btn-primary').click()
-# driver.find_element_by_id('idSIButton9').submit()
-# driver.find_element_by_name('ctl00$ContentPlaceHolder1$SubmitButton').send_keys(Keys.RETURN)
+
+#driver.find_element_by_class_name('btn-primary').click()
+driver.find_element_by_id('idSIButton9').submit()
+#driver.find_element_by_name('ctl00$ContentPlaceHolder1$SubmitButton').send_keys(Keys.RETURN)
 
 try:
     driver.find_element_by_id('idBtn_Back').click()
 except:
     pass
 
-sleep(1.25)
+sleep(2)
 
 searchbar = driver.find_element_by_name('query')
 searchbar.send_keys(college)
@@ -96,19 +98,35 @@ try:
 except:
     pass
 
-sleep(1)
+sleep(6)
 
-driver.find_element_by_class_name('hubs-top-tabs-bar').find_elements_by_class_name('hubs-top-tabs')[3].send_keys(
-    Keys.RETURN)
+#driver.find_element_by_class_name('navbar-tabs').find_elements_by_class_name('tablist')[3].send_keys(Keys.RETURN)
+driver.find_element_by_xpath(r"//a[@aria-label='Admissions']").send_keys(Keys.RETURN)
 
 sleep(1.25)
 
+# points_container = driver.find_element_by_class_name('nv-point-clips')
+# point_packages = points_container.find_elements_by_xpath(r"./child::*")
+# points =[]
+#
+# for point_package in point_packages:
+#     points.append(point_package.find_element_by_xpath(".//*"))
+data_graph = driver.find_element_by_xpath(r"//div[@class='nv-chart']")
+driver.execute_script("arguments[0].scrollIntoView(true);", data_graph)
+
+sleep(2)
+
 point_container = driver.find_element_by_class_name('nv-point-paths')
-points = point_container.find_elements_by_tag_name('path')
+points = point_container.find_elements_by_xpath(".//*")
+
+#print(point_container.get_attribute("innerHTML"))
+#print(points)
+
+#raise Exception("your gay lmao")
 
 html = driver.page_source
 soup = BeautifulSoup(html, features="html.parser")
-college_name = soup.find('h1', class_='masthead__name ng-binding').text.replace('\n', '').lower()
+college_name = soup.find('h1', class_='school-name-text').text.replace('\n', '').lower()
 
 while college_name[-1:] == ' ':
     college_name = college_name[:-1]
@@ -123,14 +141,17 @@ plan_list = []
 accept_list = []
 
 for point in points:
-
     try:
 
+        print(point.get_attribute("innerHTML"))
+        driver.execute_script(r'element.scrollIntoView(true);')
         action = ActionChains(driver).move_to_element(point).perform()
 
         html = driver.page_source
         soup = BeautifulSoup(html, features="html.parser")
-        data_point = soup.find('div', class_='xy-tooltip')
+        #data_point = soup.find('div', class_='xy-tooltip')
+        data_point = soup.select("div.nvtooltip.xy-tooltip")
+        print(f'Data? {data_point}\n')
         data = data_point.text
 
         if data.find('ACCEPTED') > -1 or data.find('DENIED') > -1:
@@ -162,8 +183,9 @@ for point in points:
 
         else:
             print('INCORRECT FORMAT --> ' + data)
-    except:
-        pass
+    except Exception as e:
+        print(e)
+
 
 dir = 'College_Data/' + college_name + '.csv'
 open(dir, 'w').close()
